@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Table 1 Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Table 1
+  m_TableCollectionNameGuidString: 5c9d8b8cc03616c4faa9cd9b2c37d62e
+  m_Entries:
+  - m_Id: 610420691296256
+    m_Key: Configuration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 611392247291904
+    m_Key: Objects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 612399798804480
+    m_Key: ControlModeExplanation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 613835219656704
+    m_Key: ChangeFolder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 614358962397184
+    m_Key: Copy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 614807534821376
+    m_Key: CopyAIPrompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615173898887168
+    m_Key: 'LoadAIResponse
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615473162477568
+    m_Key: Undo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615808224452608
+    m_Key: UndoADeletion...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616456240226304
+    m_Key: SearchForAnSpecific...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616867802112000
+    m_Key: Search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 617504405184512
+    m_Key: LoadingText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618106283614208
+    m_Key: LoadingText(1)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618463097249792
+    m_Key: PickFolder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618980661780480
+    m_Key: RotationText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 619186384003072
+    m_Key: ScaleText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 619436108668928
+    m_Key: MovementText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 620112784121856
+    m_Key: NPCDialog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 806249096011776
+    m_Key: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3037990745530368
+    m_Key: HideMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3038206324367360
+    m_Key: CreateScene
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4394431431565312
+    m_Key: EnableHold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4404087990247424
+    m_Key: Sensibility
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11648954415964160
+    m_Key: REDO TUTORIAL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52310292579360768
+    m_Key: Change sorroundings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56619257094086656
+    m_Key: Give Physics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57477963138605056
+    m_Key: Confirmation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68678933103640576
+    m_Key: Player Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052599492026368
+    m_Key: FolderChange Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052605485686784
+    m_Key: FolderChange Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052606332936192
+    m_Key: FolderChange Text
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2702475933370810586
+  references:
+    version: 2
+    RefIds:
+    - rid: 2702475933370810586
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1758877639992

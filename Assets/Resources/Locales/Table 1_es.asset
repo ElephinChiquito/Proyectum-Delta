@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Table 1_es
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: es
+  m_SharedData: {fileID: 11400000, guid: 5c9d8b8cc03616c4faa9cd9b2c37d62e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 610420691296256
+    m_Localized: "Configuraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 611392247291904
+    m_Localized: Objetos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 612399798804480
+    m_Localized: Cambiar entre un control de movimiento relativo (Recomendado) y
+      absoluto.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 613835219656704
+    m_Localized: Cambiar \n carpeta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 614358962397184
+    m_Localized: Copiar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 614807534821376
+    m_Localized: Copiar Prompt de la IA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615173898887168
+    m_Localized: Guardar Respuesta IA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615473162477568
+    m_Localized: Deshacer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615808224452608
+    m_Localized: Deshacer una eliminacion con Ctrl+Z
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616456240226304
+    m_Localized: Escribe el nombre del objeto que quieres buscar...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616867802112000
+    m_Localized: Buscar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 617504405184512
+    m_Localized: "Debes seleccionar una carpeta\nElige aquella con tus Objetos \ndescargados.
+      Por favor recuerda que\ndeberas asegurarte de que los objetos\ntengan \xA1nombres
+      acordes al objeto!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618106283614208
+    m_Localized: 'Aceptado:
+
+      .OBJ
+
+      .GLB
+
+      .GLTF'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618463097249792
+    m_Localized: Escoger Carpeta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618980661780480
+    m_Localized: "Rotaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 619186384003072
+    m_Localized: "Tama\xF1o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 619436108668928
+    m_Localized: "Posici\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 620112784121856
+    m_Localized: Dialogo NPC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 806249096011776
+    m_Localized: Idioma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3037990745530368
+    m_Localized: Quitar Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3038206324367360
+    m_Localized: Crear Escena
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4394431431565312
+    m_Localized: Cambiar si quieres poder mantener los botones de movimiento pulsados
+      para un movimiento mas fluido pero menos controlado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4404087990247424
+    m_Localized: Sensibilidad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11648954415964160
+    m_Localized: Pulsar si desea rehacer el tutorial. Recuerde que puedes saltarlo
+      con la 'M'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52310292579360768
+    m_Localized: "Cambiar el entorno de la habitaci\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56619257094086656
+    m_Localized: "Dar f\xEDsicas al objeto"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57477963138605056
+    m_Localized: "\xA1Acci\xF3n completada con \xE9xito!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68678933103640576
+    m_Localized: Controles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052599492026368
+    m_Localized: Cancelar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052605485686784
+    m_Localized: Continuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052606332936192
+    m_Localized: "Si deseas cambiar la carpeta donde almacenas tus objetos 3D, pulsa
+      Continuar.\nEsto cerrar\xE1 el proyecto completo y lo volver\xE1 a abrir antes
+      de pedirte que elijas la nueva carpeta. \xBFEst\xE1s seguro de que deseas cambiar
+      de carpeta?"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

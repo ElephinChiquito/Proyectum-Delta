@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Table 1_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 5c9d8b8cc03616c4faa9cd9b2c37d62e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 610420691296256
+    m_Localized: Configuration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 611392247291904
+    m_Localized: Objects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 612399798804480
+    m_Localized: 'Change movement control between reltive (Recommended) and absolute
+      directions. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 613835219656704
+    m_Localized: Change \n Folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 614358962397184
+    m_Localized: Copy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 614807534821376
+    m_Localized: Copy AI Prompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615173898887168
+    m_Localized: Save AI Response
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615473162477568
+    m_Localized: "Undo\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 615808224452608
+    m_Localized: Undo a deletion with ctrl+Z
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616456240226304
+    m_Localized: Type in the name of the object to search it...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616867802112000
+    m_Localized: Search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 617504405184512
+    m_Localized: "You need to select a folder\nChoose the folder with your downloaded
+      \nObjects. Please remember every object \nshould be named accordingly"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618106283614208
+    m_Localized: 'Accepted:
+
+      .OBJ
+
+      .GLB
+
+      .GLTF'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618463097249792
+    m_Localized: Pick Folder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 618980661780480
+    m_Localized: Rotation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 619186384003072
+    m_Localized: Scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 619436108668928
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 620112784121856
+    m_Localized: NPC Dialog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 806249096011776
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3037990745530368
+    m_Localized: Hide Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3038206324367360
+    m_Localized: Create Scene
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4394431431565312
+    m_Localized: Change wether you can hold the buttons for smooth but less controlled
+      movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4404087990247424
+    m_Localized: Sensibility
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11648954415964160
+    m_Localized: Hit if you wish to redo the tutorial. You can always skip it with
+      'M'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52310292579360768
+    m_Localized: Change the sorroundings of the room.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56619257094086656
+    m_Localized: Give the object physics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57477963138605056
+    m_Localized: Action completed successfully!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68678933103640576
+    m_Localized: Player Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052599492026368
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052605485686784
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69052606332936192
+    m_Localized: "If you wish to change the folder where you store your 3D Objects,
+      press Continue. \nThis will close the entire project and reopen it before prompting
+      you to choose the new folder, are you sure you wish to change folders?"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
