@@ -297,24 +297,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "link.neocortex.ollama": {
-      "version": "https://github.com/neocortex-link/neocortex-ollama-support.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
-      },
-      "hash": "0d200de91fd65ed553aead4a9fcc7760299ceb0f"
-    },
-    "link.neocortex.sdk": {
-      "version": "https://github.com/neocortex-link/neocortex-unity-sdk.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
-      },
-      "hash": "7285a5dc63486809b6be574f95f2f83d115a02d6"
-    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,
