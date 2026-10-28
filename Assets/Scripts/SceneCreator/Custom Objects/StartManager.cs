@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Neocortex.Samples;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
