@@ -11,8 +11,8 @@ EditorBuildSettings:
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 606b06789c1f31a4aab35d31fbc1a9e3, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: 5311c112d456b684ea492f7f12588f1c, type: 2}
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.localization.settings: {fileID: 11400000, guid: b6188ebfb2d88d34a943348605876b36, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 2b51158082508904db2747df002d9e44, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 049c24b707d82c847a842e00f6d86e07, type: 2}
-  m_UseUCBPForAssetBundles: 0
