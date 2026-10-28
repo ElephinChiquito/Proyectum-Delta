@@ -12,7 +12,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
-#/[Uu]ser[Ss]ettings/
+/[Uu]ser[Ss]ettings/
 *.log
 
 # Visual Studio Code & configuraciones locales
