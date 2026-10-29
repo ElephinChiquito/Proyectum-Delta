@@ -144,7 +144,29 @@ public class ExtraccionJSON
 
 
         // Buscar la posici�n final del JSON (buscamos el primer "]}")
-        int indiceFinal = extraido.LastIndexOf("]\n}");
+		// Por cambiar el json con activity singular, tuve que cambiar ] por }
+		// Pero se queda como last resort ]}
+        int indiceFinal = extraido.LastIndexOf("}\n}");
+        if (indiceFinal == -1)
+        {
+            indiceFinal = extraido.LastIndexOf("}\r\n}");
+        }
+        if (indiceFinal == -1)
+        {
+            indiceFinal = extraido.LastIndexOf("}}");
+            if(indiceFinal != -1)
+                indiceFinal = indiceFinal-1;
+        }
+        if (indiceFinal == -1)
+        {
+            indiceFinal = extraido.LastIndexOf("} }");
+        }
+        if (indiceFinal == -1)
+        {
+            indiceFinal = extraido.LastIndexOf("}  }");
+            if(indiceFinal != -1)
+                indiceFinal = indiceFinal+1;
+        }
         if (indiceFinal == -1)
         {
             indiceFinal = extraido.LastIndexOf("]\r\n}");

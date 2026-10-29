@@ -1,23 +1,42 @@
 using System;
-using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 
 [Serializable]
 public class Activity: Objeto3D
 {
-    public Pregunta[] questions;
+	
 
     public Activity() : base() {}
 	//Generico para menos bulla visual
-	public Activity(string type, Vector3Data position, float scale, bool physics, Pregunta[] questions)
+	
+	public Activity(string type, Vector3Data position, float scale, bool physics)
     : base(type, position, scale, physics)
+	{}
+
+	public Activity(string type, Vector3Data position, float scale, string rotation, bool physics)
+    :base(type, position, scale, rotation, physics)
+	{}
+
+	public Activity(string type, Vector3Data position, float scale, Vector3Data rotation, bool physics)
+    :base(type, position, scale, rotation, physics)
+	{}
+}
+
+[Serializable]
+public class TestActivityData : Activity
+{
+	// Todos estos parametros son realmente de la actividad tipo test
+	// Pero manejada como objeto 3D
+    public Pregunta[] questions;
+	public const string TYPE = "TestActivity";
+
+	public TestActivityData() : base() {type = TYPE;}
+
+	public TestActivityData(Vector3Data position, float scale, bool physics, Pregunta[] questions)
+    : base(TYPE, position, scale, physics)
 	{
-		if(type.Equals("TestActivity"))
-            this.questions = questions;
-        else //default
-            Debug.LogWarning("La actividad no tiene tipo reconocido type = {" + type + "}");
+        this.questions = questions;
 	}
 
 
@@ -31,47 +50,16 @@ public class Activity: Objeto3D
     /// <param name="rotation"></param>
     /// <param name="physics"></param>
     /// <param name="questions"></param>
-    public Activity(string type, Vector3Data position, float scale, string rotation, bool physics, Pregunta[] questions)
-    :base(type, position, scale, rotation, physics)
+    public TestActivityData(Vector3Data position, float scale, string rotation, bool physics, Pregunta[] questions)
+    :base(TYPE, position, scale, rotation, physics)
 	{
-        if(type.Equals("TestActivity"))
-            this.questions = questions;
-        else //default
-            Debug.LogWarning("La actividad no tiene tipo reconocido type = {" + type + "}");
+        this.questions = questions;
     }
 
 	// Generico con Quaternion rotation
-    public Activity(string type, Vector3Data position, float scale, Vector3Data rotation, bool physics, Pregunta[] questions)
-    :base(type, position, scale, rotation, physics)
+    public TestActivityData(Vector3Data position, float scale, Vector3Data rotation, bool physics, Pregunta[] questions)
+    :base(TYPE, position, scale, rotation, physics)
 	{ 
-        if(type.Equals("TestActivity"))
-            this.questions = questions;
-        else //default
-            Debug.LogWarning("La actividad no tiene tipo reconocido type = {" + type + "}");
-    }
-
-    /* 
-    
-    "activity": {
-		"type": "TestActivity",
-		"position": { "x": 6, "y": 0, "z": 2 },
-		"scale": 1,
-		"rotation": "south",
-		"physics": false,
-		"questions": [
-			{
-				"question": "¿Qué absorben los árboles?",
-				"options": ["Oxígeno", "Dióxido de carbono", "Helio", ""],
-				"correctAnswer": 1
-			},
-			{
-				"question": "¿Qué producen los árboles?",
-				"options": ["Oxígeno", "Metano", "Hidrógeno", "Nitrógeno"],
-				"correctAnswer": 0
-			}
-		]
+        this.questions = questions;
 	}
-    
-    */
-
 }

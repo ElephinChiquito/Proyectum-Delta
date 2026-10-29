@@ -25,7 +25,8 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		Debug.Log("Loading custom objects list on start for generador de escenas 3d");
 		customList = CustomObjectsLoader.prefabCache;
-		// Cargar todos los GameObject (prefabs) de la carpeta Resources/Objetos3D/
+		// Cargar todos los GameObject (prefabs) de la carpeta Resources/Ojetos3D/
+		// Este prefab contiene las acrtividades prefabs porque son objetos3D
 		GameObject[] prefabs = Resources.LoadAll<GameObject>("Objetos3D");
 		GameObject[] customPrefabs = customList.ToArray();
 
@@ -67,7 +68,26 @@ public class GeneradorDeEscena3D : MonoBehaviour
             ""rotation"": ""north"",
             ""dialog"": ""Hola, soy un NPC, mi función principal es ser utilizado como recurso educativo en manera de profesor interactuable, puedo ser interactuado varias veces cada punto separa mis interacciones.""
         }
-    ]
+    ],
+	""activity"": {
+		""type"": ""TestActivity"",
+		""position"": { ""x"": 6, ""y"": 0, ""z"": 2 },
+		""scale"": 1,
+		""rotation"": ""south"",
+		""physics"": false,
+		""questions"": [
+			{
+				""question"": ""¿Qué absorben los árboles?"",
+				""options"": [""Oxígeno"", ""Dióxido de carbono"", ""Helio"", """"],
+				""correctAnswer"": 1
+			},
+			{
+				""question"": ""¿Qué producen los árboles?"",
+				""options"": [""Oxígeno"", ""Metano"", ""Hidrógeno"", ""Nitrógeno""],
+				""correctAnswer"": 0
+			}
+		]
+	}
 }");
 			//Actualizar archivos para que añada el nuevo file
 			archivos = Directory.GetFiles(directorio, "historial_ia_*.json");
@@ -85,20 +105,23 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		Debug.Log("Cargando fichero: " + ruta);
 
 		string json = File.ReadAllText(ruta);
-		Escena3D escena = JsonUtility.FromJson<Escena3D>(json);
+		Escena3D escena = Escena3D.Cargar(json);
 
-		if (escena == null || escena.objects == null)
+		if (escena == null || (escena.objects == null && escena.activity == null))
 		{
 			Debug.LogError("Error: El JSON está vacío o mal formado: " + ruta);
 			return;
 		}
 
+		// Cargar objetos
 		foreach (Objeto3D objeto in escena.objects)
 		{
 			objeto.physics = true;
 			Debug.Log($"Creando objeto: {objeto.type} en {objeto.position} y con physics = {objeto.physics}");
 			CrearObjeto(objeto);
 		}
+
+		// Cargar actividad unica y singular
 		if(escena.activity != null && !string.IsNullOrEmpty(escena.activity.type))
 		{
 			Activity objeto = escena.activity;
@@ -119,7 +142,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		Debug.Log("Cargando fichero: " + ruta);
 
 		string json = File.ReadAllText(ruta);
-		Escena3D escena = JsonUtility.FromJson<Escena3D>(json);
+		Escena3D escena = Escena3D.Cargar(json);
 
 		foreach (Objeto3D objeto in escena.objects)
 		{
@@ -128,10 +151,15 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		}
 		if(escena.activity != null && !string.IsNullOrEmpty(escena.activity.type))
 		{
+			// El codigo actual trata activities como objetos fisicos singulares, 
+			// que para las actividades que se me ocurren funciona perfectamente,
+			// desconfio de la escalabilidad, pero no es objetivo escalar a tanto
+			// las actividades... no? 
 			Activity objeto = escena.activity;
 			Debug.Log($"Creando actividad: {objeto.type} en {objeto.position} y con physics = {objeto.physics}");
 
 			CrearActivity(objeto);
+			Debug.Log("Actividad: " + escena.activity.type);
 		}
 
 		Debug.Log("Escena generada con " + escena.objects.Count + " objects.");
@@ -219,13 +247,13 @@ public class GeneradorDeEscena3D : MonoBehaviour
 			}
 
 			go = Instantiate(prefab);
-			if (activity.type.ToLower().Equals("testactivity"))
+			if (activity is TestActivityData testData)
 			{
 				TestActivity testScript = go.GetComponent<TestActivity>();
-				if (testScript != null && activity.questions != null && activity.questions.Length != 0)
+				if (testScript != null && testData.questions != null && testData.questions.Length != 0)
 				{
 					// Añadir todas las preguntas
-					foreach(Pregunta pregunta in activity.questions)
+					foreach(Pregunta pregunta in testData.questions)
 					{
 						string question = pregunta.question;
 						string[] options = pregunta.options;
@@ -259,6 +287,9 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		go.transform.localScale = new Vector3(activity.scale, activity.scale, activity.scale);
 
 		go.transform.rotation = activity.rotation;
+
+		// IMPORTANTE
+		go.tag = "Activity";
 	}
 
 	public static void SaveScene()///
@@ -268,58 +299,85 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		foreach (GameObject obj in todos)
 		{
-			if (obj.name.Contains("Clone") && !obj.name.ToLower().Contains("activity"))
+			if (obj.name.Contains("Clone") && !obj.tag.Equals("Activity"))
 			{
 				Objeto3D aux = Transform2Objeto3D(obj);
 				copy.objects.Add(aux);
 			}
-			if (obj.name.Contains("Clone") && obj.name.ToLower().Contains("activity"))
+			if (obj.name.Contains("Clone") && obj.tag.Equals("Activity"))
 			{
-				// Guardar activity
-				TestActivity testActivity = obj.GetComponentInChildren<TestActivity>();
-				Objeto3D aux = Transform2Objeto3D(obj);
+				copy.activity = Transform2Activity(obj);
 				// Activity activity = new Activity(aux.type, aux.position, aux.scale, aux.rotation, false, testActivity.allQuestions)
 				// copy.activity = ;
 			}
 		}
 
-		string json = JsonUtility.ToJson(copy, true);
+		string json = copy.ToJson();
 		string ruta = Path.Combine(Application.persistentDataPath, "escena " + Map2D.x + "_" + Map2D.y + ".json");
 		File.WriteAllText(ruta, json);
 		Debug.Log("Escena guardada en: " + ruta + "En la habitacion: " + "escena " + Map2D.x + "_" + Map2D.y + ".json");
 	}
 
-	public static Objeto3D Transform2Objeto3D(GameObject obj)
+	private static void RellenarObjeto3D(GameObject obj, Objeto3D destino)
 	{
-		Objeto3D aux = new Objeto3D();
-		aux.type = obj.name.Replace("(Clone)", "").Trim();
+		destino.type = obj.name.Replace("(Clone)", "").Trim();
 
-		aux.position = new Vector3Data
+		destino.position = new Vector3Data
 		(
 			obj.transform.position.x,
 			obj.transform.position.y,
 			obj.transform.position.z
 		);
 
-		aux.scale = obj.transform.localScale.x;
+		destino.scale = obj.transform.localScale.x;
 
 		//aqui habia un problema al ser primero: la rotacion esta mal calculada pq los quaternion son entre -1 y 1
 		// segundo: si el objeto tiene fisicas se movera y rotara por tanto no sirve con comprobar cuatro casos especificos.
 
-		aux.rotation = obj.transform.rotation;
+		destino.rotation = obj.transform.rotation;
 
 
 
 		if (obj.name.Contains("npc"))
 		{
-			aux.dialog = obj.GetComponent<NpcDialog>().textoDialogo;
+			destino.dialog = obj.GetComponent<NpcDialog>().textoDialogo;
 		}
 
 		PhysicsVariable pv = obj.GetComponent<PhysicsVariable>();
-		if (pv != null) { aux.physics = pv.GetValue(); }
-		else { aux.physics = true; }
+		if (pv != null) { destino.physics = pv.GetValue(); }
+		else { destino.physics = true; }
+	}
 
+	public static Objeto3D Transform2Objeto3D(GameObject obj)
+	{
+		Objeto3D aux = new Objeto3D();
+		
+		RellenarObjeto3D(obj, aux);
 		return aux;
+	}
+
+	// Espejo para activity
+	public static Activity Transform2Activity(GameObject obj)
+	{
+		if (!obj.tag.Equals("Activity"))
+		{
+			Debug.LogError("Error, se esta llamando a transform2activity con un ojeto que no es actividad con tag Activity");
+		}
+
+		TestActivity test = obj.GetComponentInChildren<TestActivity>();
+		if (test != null)
+		{
+			TestActivityData data = new TestActivityData();
+			RellenarObjeto3D(obj, data);
+			data.type = TestActivityData.TYPE;   // el nombre del prefab puede variar en mayúsculas
+			data.questions = test.allQuestions.ToArray();
+			return data;
+		}
+
+		// else if (obj.GetComponentInChildren<OtraActividad>() ...)
+
+		Debug.LogWarning("Actividad sin script reconocido: " + obj.name);
+		return null;
 	}
 
 	public static void CleanScene()

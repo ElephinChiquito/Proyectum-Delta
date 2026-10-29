@@ -30,23 +30,6 @@ public class TestActivity : MonoBehaviour
 	// los índices de Pregunta (enunciado, A, B, C, D). Se rellena en Start().
 	private GameObject[] componentes;
 
-	/*public class Pair <L, R>
-	{
-		L left;
-		R right;
-
-		public Pair(L left, R right)
-		{
-			this.left = left;
-			this.right = right;
-		}
-
-		public L getLeft(){return left;}
-		public R getRight(){return right;}
-		public void setLeft(L left){this.left = left;}
-		public void setRight(R right){this.right = right;}
-	}*/
-
 	// Lista con todas las preguntas del test.
 	// NonSerialized: evita que Unity intente serializarla en el Inspector.
 	[System.NonSerialized] public List<Pregunta> allQuestions;
