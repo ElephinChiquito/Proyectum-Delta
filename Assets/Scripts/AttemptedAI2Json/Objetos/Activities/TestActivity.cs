@@ -1,13 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 
 /// <summary>
 /// Controla una actividad tipo test dentro de Unity.
@@ -54,7 +49,7 @@ public class TestActivity : MonoBehaviour
 
 	// Lista con todas las preguntas del test.
 	// NonSerialized: evita que Unity intente serializarla en el Inspector.
-	[System.NonSerialized] List<Pregunta> allQuestions;
+	[System.NonSerialized] public List<Pregunta> allQuestions;
 
 	/// <summary>Índice (0-3) de la respuesta correcta de la pregunta que se está mostrando.</summary>
 	public int currentAnswer;
@@ -67,18 +62,9 @@ public class TestActivity : MonoBehaviour
 	const int resC = 2;
 	const int resD = 3;
 
-    // Start se llama una vez, antes del primer Update, al crearse el MonoBehaviour
-    void Start()
+	void Awake()
 	{
-		// Orden importante: debe coincidir con los índices de Pregunta
-		// (0 = enunciado, 1 = A, 2 = B, 3 = C, 4 = D)
-		componentes = new GameObject[] {enunciado, buttonA, buttonB, buttonC, buttonD};
-		
-		// Lista de preguntas
 		allQuestions = new List<Pregunta>();
-		
-		// Pregunta inicial a modo de pantalla de bienvenida
-		// (opciones C y D vacías porque solo hay dos respuestas)
 		allQuestions.Add(new Pregunta(
 			"¿Comenzar el test?",
 			"Sí",
@@ -88,13 +74,22 @@ public class TestActivity : MonoBehaviour
 			0
 		));
 
-		// Pregunta de ejemplo
+		/* // Pregunta de ejemplo
 		AddNewQuestion("¿Cuál es la capital de Francia?",
 			"París",
 			"Roma",
 			"Londres",
 			"Berlín",
-			0);
+			0); */
+	}
+
+    // Start se llama una vez, antes del primer Update, al crearse el MonoBehaviour
+    void Start()
+	{
+		// Orden importante: debe coincidir con los índices de Pregunta
+		// (0 = enunciado, 1 = A, 2 = B, 3 = C, 4 = D)
+		componentes = new GameObject[] {enunciado, buttonA, buttonB, buttonC, buttonD};
+		
 
 		// Empezamos en la primera pregunta y con los botones en gris
 		progress = 0;
@@ -117,6 +112,14 @@ public class TestActivity : MonoBehaviour
 	{
 		allQuestions.Add(new Pregunta(
 			pregunta, opcionA, opcionB, opcionC, opcionD, answerNumber
+		));
+	}
+
+	public void AddNewQuestion
+	(string pregunta, string[] options, int answerNumber)
+	{
+		allQuestions.Add(new Pregunta(
+			pregunta, options, answerNumber
 		));
 	}
 
@@ -164,7 +167,7 @@ public class TestActivity : MonoBehaviour
 
 		// Solo se avanza si se ha acertado; si no, se repite la misma pregunta.
 		// El módulo hace que al terminar la última se vuelva a la primera.
-		if(preguntaActual.getAnswerNumber() == res)
+		if(preguntaActual.getcorrectAnswer() == res)
 		{
 			progress = (progress + 1)%allQuestions.Count;
 			
@@ -215,15 +218,21 @@ public class TestActivity : MonoBehaviour
 	{
 		progress = num;
 		Pregunta preguntaActual = allQuestions[num];
-		string[] textos = preguntaActual.getTextos();
+		string[] options = preguntaActual.getOptions();
 
-		// Actualizar los textos de enunciado y botones.
-		// Recorre los 5 elementos (0 = pregunta ... 4 = opción D)
-		for(int i = 0; i <= Pregunta.OPCIOND; i++) //Bucle, tamaño de pregunta es d) = 4
+		// Actualizar los options de enunciado y botones.
+		// Recorre los 5-1 elementos (1 = opcion A ... 4 = opción D)
+		for(int i = Pregunta.OPCIONA; i <= Pregunta.OPCIOND; i++) //Bucle, tamaño de pregunta es d) = 4
 		{
-			componentes[i].GetComponentInChildren<TextMeshProUGUI>().SetText(textos[i]);
+			componentes[i].GetComponentInChildren<TextMeshProUGUI>().SetText(options[i-1]);
 		}
-		currentAnswer = preguntaActual.getAnswerNumber();
+
+		// Enunciado
+		string question = preguntaActual.getQuestion();
+		componentes[Pregunta.QUESTION].GetComponentInChildren<TextMeshProUGUI>().SetText(question);
+
+
+		currentAnswer = preguntaActual.getcorrectAnswer();
 	}
 
 
@@ -235,40 +244,42 @@ public class TestActivity : MonoBehaviour
 	y objetos de la escena desde un fichero externo:
 
 {
-	"objects": [
-		{
-		"id": "tree_01",
-		"type": "tree",
-		"position": { "x": 0, "y": 0, "z": 0 },
+    "objects": [
+        {
+            "type": "tree",
+            "position": { "x": 0, "y": 0, "z": 0 },
+            "scale": 1,
+            "rotation": "north",
+            "physics": false
+        },
+        {
+            "type": "npc",
+            "position": { "x": 4, "y": 0, "z": 2 },
+            "scale": 1,
+            "rotation": "east",
+            "dialog": "¡Hola! Acércate al panel para hacer el test.",
+            "physics": true
+        }
+    ],
+    "activity": {
+		"type": "TestActivity",
+		"position": { "x": 6, "y": 0, "z": 2 },
 		"scale": 1,
-		"rotation": "north"
-		}
-	],
-	"activities": [
-		{
-		"id": "activity_01",
-		"type": "quiz",
-		"title": "Los ecosistemas",
+		"rotation": "south",
+		"physics": false,
 		"questions": [
 			{
-			"question": "¿Qué absorben los árboles?",
-			"options": [
-				"Oxígeno",
-				"Dióxido de carbono",
-				"Helio",
-				""
-			],
-			"correctAnswer": 1
+				"question": "¿Qué absorben los árboles?",
+				"options": ["Oxígeno", "Dióxido de carbono", "Helio", ""],
+				"correctAnswer": 1
+			},
+			{
+				"question": "¿Qué producen los árboles?",
+				"options": ["Oxígeno", "Metano", "Hidrógeno", "Nitrógeno"],
+				"correctAnswer": 0
 			}
 		]
-		},
-		{
-		"id": "activity_02",
-		"type": "find_object",
-		"title": "Encuentra el árbol",
-		"targetObjectId": "tree_01"
-		}
-	]
+	}
 }
 	
 	*/

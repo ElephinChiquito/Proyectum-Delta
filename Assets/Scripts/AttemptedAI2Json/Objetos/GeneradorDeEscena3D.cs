@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GeneradorDeEscena3D : MonoBehaviour
 {
+	/* NECESITAS CAMBIAR SAVE SCENE */
 
 	public static string[] mainObjects;
 	public static string[] customObjects;
@@ -98,6 +99,13 @@ public class GeneradorDeEscena3D : MonoBehaviour
 			Debug.Log($"Creando objeto: {objeto.type} en {objeto.position} y con physics = {objeto.physics}");
 			CrearObjeto(objeto);
 		}
+		if(escena.activity != null && !string.IsNullOrEmpty(escena.activity.type))
+		{
+			Activity objeto = escena.activity;
+			Debug.Log($"Creando actividad: {objeto.type} en {objeto.position} y con physics = {objeto.physics}");
+
+			CrearActivity(objeto);
+		}
 
 		SaveScene();
 		Debug.Log("Escena generada con " + escena.objects.Count + " objects.");
@@ -117,6 +125,13 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		{
 			Debug.Log($"Creando objeto: {objeto.type} en {objeto.position}");
 			CrearObjeto(objeto);
+		}
+		if(escena.activity != null && !string.IsNullOrEmpty(escena.activity.type))
+		{
+			Activity objeto = escena.activity;
+			Debug.Log($"Creando actividad: {objeto.type} en {objeto.position} y con physics = {objeto.physics}");
+
+			CrearActivity(objeto);
 		}
 
 		Debug.Log("Escena generada con " + escena.objects.Count + " objects.");
@@ -145,11 +160,6 @@ public class GeneradorDeEscena3D : MonoBehaviour
 				{
 					dialogoScript.textoDialogo = objeto.dialog;
 				}
-			}
-			// TestActivity instantiate
-			else if (objeto.type.ToLower().Equals("testactivity"))
-			{
-				
 			}
 		}
 
@@ -193,6 +203,64 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		go.transform.rotation = objeto.rotation;
 	}
 
+	public static void CrearActivity(Activity activity)
+	{
+		GameObject go = null;
+
+		// mainobjects must contain activity
+		if (mainObjects.Contains(activity.type.ToLower()))
+		{
+			GameObject prefab = Resources.Load<GameObject>("Objetos3D/" + activity.type.ToLower());
+
+			if (prefab == null)
+			{
+				Debug.LogWarning("Prefab no encontrado para: " + activity.type);
+				return;
+			}
+
+			go = Instantiate(prefab);
+			if (activity.type.ToLower().Equals("testactivity"))
+			{
+				TestActivity testScript = go.GetComponent<TestActivity>();
+				if (testScript != null && activity.questions != null && activity.questions.Length != 0)
+				{
+					// Añadir todas las preguntas
+					foreach(Pregunta pregunta in activity.questions)
+					{
+						string question = pregunta.question;
+						string[] options = pregunta.options;
+						int correctAnswer = pregunta.correctAnswer;
+
+						testScript.AddNewQuestion(question, options, correctAnswer);
+
+						Debug.Log("Añadiendo pregunta question: "+question+"  |  correctAnswer: " + correctAnswer);
+					}
+				}
+				else
+				{
+					Debug.LogWarning("error en la creacion de activity problema con el script");
+				}
+			}
+			// RESTO DE CASOS
+			else if (false)
+			{
+				
+			}
+		}
+
+		else
+		{
+			Debug.LogWarning("type de objeto no reconocido: " + activity.type);
+			return;
+		}
+
+		go.transform.position = activity.position.ToVector3();
+
+		go.transform.localScale = new Vector3(activity.scale, activity.scale, activity.scale);
+
+		go.transform.rotation = activity.rotation;
+	}
+
 	public static void SaveScene()///
 	{
 		GameObject[] todos = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
@@ -200,10 +268,18 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		foreach (GameObject obj in todos)
 		{
-			if (obj.name.Contains("Clone"))
+			if (obj.name.Contains("Clone") && !obj.name.ToLower().Contains("activity"))
 			{
 				Objeto3D aux = Transform2Objeto3D(obj);
 				copy.objects.Add(aux);
+			}
+			if (obj.name.Contains("Clone") && obj.name.ToLower().Contains("activity"))
+			{
+				// Guardar activity
+				TestActivity testActivity = obj.GetComponentInChildren<TestActivity>();
+				Objeto3D aux = Transform2Objeto3D(obj);
+				// Activity activity = new Activity(aux.type, aux.position, aux.scale, aux.rotation, false, testActivity.allQuestions)
+				// copy.activity = ;
 			}
 		}
 
