@@ -122,6 +122,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		Debug.Log("Escena generada con " + escena.objects.Count + " objects.");
 	}
 
+
 	public static void CrearObjeto(Objeto3D objeto)
 	{
 		GameObject go = null;
@@ -144,6 +145,11 @@ public class GeneradorDeEscena3D : MonoBehaviour
 				{
 					dialogoScript.textoDialogo = objeto.dialog;
 				}
+			}
+			// TestActivity instantiate
+			else if (objeto.type.ToLower().Equals("testactivity"))
+			{
+				
 			}
 		}
 

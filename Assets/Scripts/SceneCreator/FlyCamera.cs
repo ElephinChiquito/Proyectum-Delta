@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class FlyCamera : MonoBehaviour
 {
@@ -419,7 +422,13 @@ public class FlyCamera : MonoBehaviour
 
 	public void CheckInteractionWithMouseLeft()
 	{
-		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+		if (CheckInteractionWithUI())
+        return;
+
+
+
+
+		Ray ray = cam.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
 		RaycastHit hit;
 
 		if (Physics.Raycast(ray, out hit, 1000))
@@ -473,6 +482,43 @@ public class FlyCamera : MonoBehaviour
 
 		clickMenu.SelectGO(go);
 	}
+
+	// Cuidado hecho por ia revisar
+	private bool CheckInteractionWithUI()
+{
+    if (EventSystem.current == null)
+    {
+        Debug.LogError("No existe EventSystem activo");
+        return false;
+    }
+
+    PointerEventData pointer = new PointerEventData(EventSystem.current);
+
+    pointer.position = cam.pixelRect.center;
+
+    List<RaycastResult> results = new List<RaycastResult>();
+
+    EventSystem.current.RaycastAll(pointer, results);
+
+    Debug.Log("UI detectados: " + results.Count);
+
+    foreach (RaycastResult result in results)
+    {
+        Debug.Log("UI encontrado: " + result.gameObject.name);
+
+        Button button = result.gameObject.GetComponentInParent<Button>();
+
+        if (button != null && button.IsActive() && button.IsInteractable())
+        {
+            Debug.Log("BOTÓN DETECTADO: " + button.name);
+
+            button.onClick.Invoke();
+            return true;
+        }
+    }
+
+    return false;
+}
 
 
 }
