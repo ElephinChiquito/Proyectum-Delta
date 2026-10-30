@@ -60,13 +60,11 @@ public class FlyCamera : MonoBehaviour
 		canvasAuxGO.SetActive(false);
 		confirmationPopUp.SetActive(false);
 		hideToolTipToggle.setToolTipVisibility(false, false);
+
+		// Tutorial
 		if (tutorialCanvas.activeInHierarchy)
 		{
-			for (int i = 0; i < tutorialCanvas.transform.childCount; i++)
-			{
-				RectTransform childGOTransform = tutorialCanvas.transform.GetChild(i).GetComponent<RectTransform>();
-				childGOTransform.anchoredPosition = new Vector2(72, 16);
-			}
+			MoveTutorialCanvas(72, 16);
 			clippyText.SetActive(false);
 		}
 		else
@@ -83,26 +81,13 @@ public class FlyCamera : MonoBehaviour
 		confirmationPopUp.SetActive(false);
 		hideToolTipToggle.setToolTipVisibility(true, false);
 
-		if (tutorialCanvas.activeInHierarchy)
-		{
-			for (int i = 0; i < tutorialCanvas.transform.childCount; i++)
-			{
-				RectTransform childGOTransform = tutorialCanvas.transform.GetChild(i).GetComponent<RectTransform>();
-				childGOTransform.anchoredPosition = new Vector2(237, 160);
-			}
-		}
+		// Tutorial
+		if (tutorialCanvas.activeInHierarchy){ MoveTutorialCanvas(237, 160); }
 	}
 
 	public void AdjustTutorialPopUpAuxMenu()
 	{
-		if (tutorialCanvas.activeInHierarchy)
-		{
-			for (int i = 0; i < tutorialCanvas.transform.childCount; i++)
-			{
-				RectTransform childGOTransform = tutorialCanvas.transform.GetChild(i).GetComponent<RectTransform>();
-				childGOTransform.anchoredPosition = new Vector2(237, -160);
-			}
-		}
+		if (tutorialCanvas.activeInHierarchy){ MoveTutorialCanvas(237, -160); }
 	}
 	public void AdjustTutorialPopUpAuxMenuOut()
 	{
@@ -113,14 +98,9 @@ public class FlyCamera : MonoBehaviour
 	{
 		Lock();
 		clickMenuCanvas.gameObject.SetActive(true);
-		if (tutorialCanvas.activeInHierarchy)
-		{
-			for (int i = 0; i < tutorialCanvas.transform.childCount; i++)
-			{
-				RectTransform childGOTransform = tutorialCanvas.transform.GetChild(i).GetComponent<RectTransform>();
-				childGOTransform.anchoredPosition = new Vector2(-234.7f, -155.8f); // -234.7 -155.8
-			}
-		}
+
+		// Tutorial
+		if (tutorialCanvas.activeInHierarchy){ MoveTutorialCanvas(-234.7f, -155.8f); }
 	}
 	public void UnlockAllForClickMenu()
 	{
@@ -137,6 +117,15 @@ public class FlyCamera : MonoBehaviour
 
 		//Guardar los cambios a la escena
 		GeneradorDeEscena3D.SaveScene();
+	}
+
+	public void MoveTutorialCanvas(float x, float y)
+	{
+		for (int i = 0; i < tutorialCanvas.transform.childCount; i++)
+		{
+			RectTransform childGOTransform = tutorialCanvas.transform.GetChild(i).GetComponent<RectTransform>();
+			childGOTransform.anchoredPosition = new Vector2(72, 16);
+		}
 	}
 
 	public void Lock()
@@ -236,7 +225,6 @@ public class FlyCamera : MonoBehaviour
 
 		if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z)) UndoZ();
 		else if (Input.GetKeyDown(KeyCode.Z)) DestroyWithZ();
-
 
 
 		if (VariablesLoader.Data.freeCamera)
@@ -395,6 +383,7 @@ public class FlyCamera : MonoBehaviour
 	{
 		Debug.Log("Añadida al Stack: " + go.name);
 
+		// Caso Objeto3D
 		Objeto3D objeto3D = GeneradorDeEscena3D.Transform2Objeto3D(go);
 		historyZ.Push(objeto3D);
 	}
@@ -422,12 +411,6 @@ public class FlyCamera : MonoBehaviour
 
 	public void CheckInteractionWithMouseLeft()
 	{
-		if (CheckInteractionWithUI())
-        return;
-
-
-
-
 		Ray ray = cam.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
 		RaycastHit hit;
 
@@ -435,6 +418,8 @@ public class FlyCamera : MonoBehaviour
 		{
 			Debug.Log("Has hecho clic en: " + hit.collider.gameObject.name);
 
+
+			// Puerta
 			DoorBehaviour door = hit.collider.GetComponentInParent<DoorBehaviour>();
 			if (door != null)
 			{
@@ -442,17 +427,33 @@ public class FlyCamera : MonoBehaviour
 				door.Travel();
 				TutorialPopUp.SetFirstTimeTravelTrue();
 			}
+
 			if (hit.collider.gameObject.tag != "Undestructible")
 			{
+				// Click Menu
 				if (VariablesLoader.Data.freeCamera)
                 {
 					clickMenu.ShowPhysicsToggle(true);
+
 					OpenClickMenu(hit.collider.gameObject.transform.root.gameObject);
 					clickMenu.ShowNPCDialog(false);
 					clickMenu.ShowPhysicsToggle(false);
-                }
+
+					PhysicsVariable pv = hit.collider.GetComponentInParent<PhysicsVariable>();
+					if(pv != null){ clickMenu.ShowPhysicsToggle(true); }
+                } 
+				// Esto es para todo lo interactuable en Demo!!!
+				else
+				{
+					// En demo, no querra editar, y comprobar 
+					// No usa raycast original
+					if (CheckInteractionWithUI()) return;
+				}
+				
 			}
+
 			// Si el objeto tiene un script "Interactuable", llama a su acción
+			// Esto no es cierto no es global
 			NpcDialog interact = hit.collider.GetComponentInParent<NpcDialog>();
 			if (interact != null)
 			{
@@ -464,11 +465,7 @@ public class FlyCamera : MonoBehaviour
 					clickMenu.SetNPCDialogBox(interact.textoDialogo);
                 }
 			}
-			PhysicsVariable pv = hit.collider.GetComponentInParent<PhysicsVariable>();
-			if(pv != null)
-            {
-                clickMenu.ShowPhysicsToggle(true);
-            }
+			
 
 		}
 	}
@@ -483,7 +480,7 @@ public class FlyCamera : MonoBehaviour
 		clickMenu.SelectGO(go);
 	}
 
-	// Cuidado hecho por ia revisar
+	// Para Actividades Overworld Canvas
 	private bool CheckInteractionWithUI()
 	{
 		if (EventSystem.current == null)

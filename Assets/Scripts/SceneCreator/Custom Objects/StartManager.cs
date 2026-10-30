@@ -31,6 +31,7 @@ public class StartManager : MonoBehaviour
     [SerializeField] public GameObject ChatSample;
     [SerializeField] public GameObject AuxiliaryMenu;
     [SerializeField] public GameObject ClickMenu;
+    [SerializeField] public GameObject RoomList;
     [SerializeField] public LanguageButton languageButton;
     [SerializeField] public ClickMenu clickMenu;
     [SerializeField] public RoomSorroundings roomSorroundings;
@@ -48,6 +49,7 @@ public class StartManager : MonoBehaviour
         AuxiliaryMenu.SetActive(false);
         ClickMenu.SetActive(false);
         Tutorial.SetActive(true);
+        RoomList.SetActive(true);
 
         VariablesLoader.LoadOrCreate();
         cam.transform.root.gameObject.SetActive(true);
