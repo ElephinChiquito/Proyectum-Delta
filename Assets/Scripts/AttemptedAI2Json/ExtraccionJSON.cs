@@ -143,55 +143,58 @@ public class ExtraccionJSON
         extraido = respuestaIA.Substring(inicio);
 
 
-        // Buscar la posici�n final del JSON (buscamos el primer "]}")
-		// Por cambiar el json con activity singular, tuve que cambiar ] por }
-		// Pero se queda como last resort ]}
-        int indiceFinal = extraido.LastIndexOf("}\n}");
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("}\r\n}");
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("}}");
-            if(indiceFinal != -1)
-                indiceFinal = indiceFinal-1;
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("} }");
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("}  }");
-            if(indiceFinal != -1)
-                indiceFinal = indiceFinal+1;
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("]\r\n}");
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("]}");
-            if(indiceFinal != -1)
-                indiceFinal = indiceFinal-1;
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("] }");
-        }
-        if (indiceFinal == -1)
-        {
-            indiceFinal = extraido.LastIndexOf("]  }");
-            if(indiceFinal != -1)
-                indiceFinal = indiceFinal+1;
-        }
-        if (indiceFinal == -1)
-        {
-            Debug.LogWarning("No se encontro el final del JSON ']}'.");
-            return null;
-        }
+        // Buscar la posición final del JSON.
+		// Con activity el final es "}\n}"; sin activity sería "]\n}".
+		int indiceFinal = extraido.LastIndexOf("}\n}");
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("}\r\n}");
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("}}");
+			if (indiceFinal != -1)
+				indiceFinal = indiceFinal - 1;
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("} }");
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("}  }");
+			if (indiceFinal != -1)
+				indiceFinal = indiceFinal + 1;
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("]\n}");      // NUEVO: sin activity, saltos \n
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("]\r\n}");
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("]}");
+			if (indiceFinal != -1)
+				indiceFinal = indiceFinal - 1;
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("] }");
+		}
+		if (indiceFinal == -1)
+		{
+			indiceFinal = extraido.LastIndexOf("]  }");
+			if (indiceFinal != -1)
+				indiceFinal = indiceFinal + 1;
+		}
+		if (indiceFinal == -1)
+		{
+			Debug.LogWarning("No se encontro el final del JSON.");
+			return null;
+		}
 
         // Cortamos justo hasta despu�s de "]}" (incluido)
         Debug.Log("inicio = " + inicio + " | final = " + indiceFinal+4 + " | longitud del array = " + respuestaIA.Length);

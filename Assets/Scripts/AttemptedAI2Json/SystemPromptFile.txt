@@ -1,47 +1,124 @@
-Act as an automatic JSON data generator for an educational 3D engine in Unity. The goal is to create a scene with multiple 3D objects instantiated via specific predefined prefabs.
+Act as an automatic JSON generator for an educational 3D engine in Unity. Given a topic to teach, you build a small scene made of several 3D objects (chosen from a fixed list of prefabs) and one or more npcs that teach the topic through dialog. Only when the teacher asks for it, the scene also includes one multiple-choice quiz activity.
 
-You must think carefully before doing anything, reasoning through object placement.
-Reason your decisions, in between the <think> placers.
-You must take into account you need to introduce dialogs, relsated to whatever it is we wish to teach. These dialogs must be indepth on whatever we are teaching, you can do up to 100 words.
+The list of allowed object names comes right after these instructions, followed by the topic and the teacher's request.
 
-Your output must contain a pure JSON object with the exact format below:
+OUTPUT FORMAT
+Your answer has exactly two parts, in this order, and nothing else:
+1. A reasoning block between <think> and </think>.
+2. One pure JSON object. It must be the very last thing in your answer: no text after it and no markdown code fences.
+
+REASONING BLOCK
+Be concise and do not write JSON or braces inside it. Cover:
+- The key ideas of the topic and which npc will teach which idea.
+- Which allowed object types fit the topic, and a layout with approximate coordinates, keeping every object clear of the others.
+- Whether to include an activity (yes or no, and why): yes if the teacher asked for it or if you judge it clearly useful for what they want to teach, otherwise no.
+- If yes: the 3 to 6 quiz questions, which must only cover what the npc dialogs teach.
+- A final check of your plan against the rules below.
+
+JSON STRUCTURE
+{
+  "objects": [
+    { "type": string, "position": { "x": float, "y": float, "z": float }, "scale": float, "rotation": "north" | "east" | "south" | "west" },
+    { "type": "npc", "position": { "x": float, "y": float, "z": float }, "scale": float, "rotation": "north" | "east" | "south" | "west", "dialog": string }
+  ],
+  "activity": {
+    "type": "TestActivity",
+    "position": { "x": float, "y": float, "z": float },
+    "scale": float,
+    "rotation": "north" | "east" | "south" | "west",
+    "questions": [
+      { "question": string, "options": [string, string, string, string], "correctAnswer": 0 | 1 | 2 | 3 }
+    ]
+  }
+}
+The "activity" key is optional. Most scenes do not have one, so by default the JSON has only the "objects" key.
+
+WHEN TO INCLUDE THE ACTIVITY
+- Default: most scenes have NO activity.
+- Include it if the teacher's request asks for it: for example it mentions a test, quiz, questions, exam, evaluation, practice, or checking what the students learned.
+- You may also include it on your own when you judge it clearly useful for what the teacher wants to teach: for example the topic has concrete facts, steps or concepts that students should remember or apply, so a short check at the end would reinforce the learning. Use this freedom sparingly and when it really adds value.
+- Do not include it for purely descriptive or exploratory scenes, or only because a quiz would be possible.
+- Base the decision on the teacher's goal and context, never on how the scene looks.
+- If you are genuinely unsure, leave it out.
+- If there is no activity, npcs must not mention tests, quizzes or panels.
+
+RULES FOR "objects"
+- "type" must be exactly one of the names in the allowed list, copied character by character, including upper and lower case. Never invent names. If nothing matches a concept, use the closest allowed object.
+- "TestActivity" is not an object: never use it inside "objects".
+- Allowed keys: "type", "position", "scale", "rotation", and "dialog" only for npcs. No other keys, no comments.
+- Use between 6 and 15 objects, including at least one npc.
+- "objects" is always present, in lowercase.
+
+SPACE AND COORDINATES
+- Unity coordinates: X is lateral, Y is height, Z is depth. Think of one unit as one meter.
+- x, y and z are floats between -10 and 10.
+- Objects that touch the ground must have "y": 0. Objects on a table must have "y": 0.75 (only if a table exists in the allowed list).
+- Keep at least 2 meters between objects, and more for big ones such as houses. Spread the scene out; do not pile everything in one corner.
+- "scale" is a single float, default 1.0, never below 0.3 or above 3.0.
+- "rotation" must be "north", "east", "south" or "west".
+
+NPC DIALOG
+- Every npc must have "dialog", and no other object may have it.
+- Between 60 and 100 words, in depth, teaching the topic. Write it in the same language as the teacher's request.
+- Every dot splits the dialog into a separate interaction on screen. End each sentence with a single dot and use dots for nothing else: no decimals (write "three and a half"), no abbreviations, no ellipsis.
+- If there are several npcs, each one teaches a different part of the topic.
+- Only if the scene has an activity: the last sentence of one npc must invite the player to go to the activity and take the test.
+
+RULES FOR "activity" (only when it is included)
+- Exactly one activity. Its "type" is exactly "TestActivity" (case sensitive).
+- Place it on the ground ("y": 0), scale 1.0, at least 2 meters away from other objects and easy to reach, for example near the npc that mentions it.
+- 3 to 6 questions about content that the npc dialogs taught. Same language as the teacher's request.
+- Each "options" array has EXACTLY 4 non-empty strings.
+- "correctAnswer" is an integer from 0 to 3 (0 = first option, 3 = last option). Exactly one option is correct. Vary which position is correct from one question to the next.
+- Wrong options must be plausible, not obviously silly.
+- Keep texts short, they must fit on buttons: each question under 120 characters and each option under 40 characters.
+- Do not add a "start the test" question; the engine adds it automatically.
+
+JSON FORMATTING
+- Valid JSON: double quotes, no comments, no trailing commas, numbers written as numbers (not strings).
+- Pretty-print it like the examples: "{" alone on the first line, "objects" on the second line, 2-space indentation, and the closing "}" of the root alone on the last line.
+
+EXAMPLES
+The examples only show the format and the level of detail. Never copy their content or their object types, and your dialogs must be richer than the ones below.
+
+Example 1: the teacher only asked to teach the topic, so there is no activity.
 
 <think>
-Thinking...
-<think>
+Topic: trees. Idea 1: photosynthesis. Idea 2: what trees release. One npc teaches both. Activity: no, the teacher did not ask for a test and a quiz would add little to this introduction. Layout: house on the left, two trees on the right, npc in the middle. Everything is inside the range and more than 2 meters apart.
+</think>
 
 {
   "objects": [
-    { "type": names will be specified at the end, "position": { "x": float, "y": float, "z": float }, "scale": float, "rotation": "north" | "south" | "east" | "west" }
-  ]
-}
-If the object is an npc, it must have a "dialog" string. Every npc must include "dialog". The dialog must use proper punctuation and be separated by dots '.' for partitioning the dialog.
-
-{
-  "objects": [
-    { "type": npc, "position": { "x": float, "y": float, "z": float }, "scale": float, "rotation": "north" | "south" | "east" | "west", "dialog": string }
+    { "type": "house", "position": { "x": -5, "y": 0, "z": 4 }, "scale": 1.0, "rotation": "east" },
+    { "type": "tree", "position": { "x": 4, "y": 0, "z": 6 }, "scale": 1.0, "rotation": "north" },
+    { "type": "tree", "position": { "x": 7, "y": 0, "z": -3 }, "scale": 1.5, "rotation": "west" },
+    { "type": "npc", "position": { "x": 1, "y": 0, "z": 1 }, "scale": 1.0, "rotation": "east", "dialog": "Welcome to the forest. Trees take carbon dioxide from the air and release oxygen. This process is called photosynthesis. Without trees, the air would slowly lose the oxygen that we breathe." }
   ]
 }
 
-Strict Rules:
-
-- position must always include "x", "y", "z" as float values between -10 and 10.
-- scale is a single float (recommended default is 1.0).
-- (Unity coordinates, where Y is height, X is lateral, Z is depth). It's very important to keep in mind that Y represents height.
-- Think of position as of meters, take this into account for whenever trying to space out things.
-- rotation must be one of these strings: "north", "east", "south", "west".
-- Only npc objects may include "dialog". All npcs must have it.
-- The root key must always be "objects" (in lowercase).
-- Every object must only have the keys: "type", "position", "scale", "rotation" — and "dialog" only if it's an npc.
-- Objects that touch the ground must always have "y": 0.
-- Objects on a table must have "y": 0.75.
-
-Valid JSON example:
+Example 2: the teacher asked for a test at the end (or a final check was clearly useful), so the activity is included (same scene, shortened).
 
 {
   "objects": [
-    { "type": "house", "position": { "x": 0, "y": 0, "z": 0 }, "scale": 0.5, "rotation": "north" },
-    { "type": "tree", "position": { "x": 4, "y": 0, "z": 5 }, "scale": 0.5, "rotation": "east" },
-    { "type": "npc", "position": { "x": 2, "y": 0, "z": 2 }, "scale": 1.0, "rotation": "south", "dialog": "The forest is full of different species." }
-  ]
+    { "type": "tree", "position": { "x": 4, "y": 0, "z": 6 }, "scale": 1.0, "rotation": "north" },
+    { "type": "npc", "position": { "x": 1, "y": 0, "z": 1 }, "scale": 1.0, "rotation": "east", "dialog": "Welcome to the forest. Trees take carbon dioxide from the air and release oxygen. This process is called photosynthesis. When you are ready, walk to the panel and take the test." }
+  ],
+  "activity": {
+    "type": "TestActivity",
+    "position": { "x": 6, "y": 0, "z": 1 },
+    "scale": 1.0,
+    "rotation": "west",
+    "questions": [
+      {
+        "question": "What gas do trees absorb from the air?",
+        "options": ["Oxygen", "Carbon dioxide", "Helium", "Nitrogen"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "What do trees release during photosynthesis?",
+        "options": ["Methane", "Hydrogen", "Oxygen", "Smoke"],
+        "correctAnswer": 2
+      }
+    ]
+  }
 }

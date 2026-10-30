@@ -228,52 +228,47 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		go.transform.localScale = new Vector3(objeto.scale, objeto.scale, objeto.scale);
 
-		go.transform.rotation = objeto.rotation;
+		go.transform.rotation = objeto.Rotation;
 	}
 
 	public static void CrearActivity(Activity activity)
 	{
-		GameObject go = null;
-
 		// mainobjects must contain activity
-		if (mainObjects.Contains(activity.type.ToLower()))
+		GameObject prefab = Resources.Load<GameObject>("Actividades/" + activity.type.ToLower());
+
+		if (prefab == null)
 		{
-			GameObject prefab = Resources.Load<GameObject>("Objetos3D/" + activity.type.ToLower());
+			Debug.LogWarning("Prefab no encontrado para: " + activity.type);
+			return;
+		}
 
-			if (prefab == null)
+		GameObject go = Instantiate(prefab);
+		if (activity is TestActivityData testData)
+		{
+			TestActivity testScript = go.GetComponent<TestActivity>();
+			if (testScript != null && testData.questions != null && testData.questions.Length != 0)
 			{
-				Debug.LogWarning("Prefab no encontrado para: " + activity.type);
-				return;
-			}
-
-			go = Instantiate(prefab);
-			if (activity is TestActivityData testData)
-			{
-				TestActivity testScript = go.GetComponent<TestActivity>();
-				if (testScript != null && testData.questions != null && testData.questions.Length != 0)
+				// Añadir todas las preguntas
+				foreach(Pregunta pregunta in testData.questions)
 				{
-					// Añadir todas las preguntas
-					foreach(Pregunta pregunta in testData.questions)
-					{
-						string question = pregunta.question;
-						string[] options = pregunta.options;
-						int correctAnswer = pregunta.correctAnswer;
+					string question = pregunta.question;
+					string[] options = pregunta.options;
+					int correctAnswer = pregunta.correctAnswer;
 
-						testScript.AddNewQuestion(question, options, correctAnswer);
+					testScript.AddNewQuestion(question, options, correctAnswer);
 
-						Debug.Log("Añadiendo pregunta question: "+question+"  |  correctAnswer: " + correctAnswer);
-					}
-				}
-				else
-				{
-					Debug.LogWarning("error en la creacion de activity problema con el script");
+					Debug.Log("Añadiendo pregunta question: "+question+"  |  correctAnswer: " + correctAnswer);
 				}
 			}
-			// RESTO DE CASOS
-			else if (false)
+			else
 			{
-				
+				Debug.LogWarning("error en la creacion de activity problema con el script");
 			}
+		}
+		// RESTO DE CASOS
+		else if (false)
+		{
+			
 		}
 
 		else
@@ -286,7 +281,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		go.transform.localScale = new Vector3(activity.scale, activity.scale, activity.scale);
 
-		go.transform.rotation = activity.rotation;
+		go.transform.rotation = activity.Rotation;
 
 		// IMPORTANTE
 		go.tag = "Activity";
@@ -334,7 +329,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		//aqui habia un problema al ser primero: la rotacion esta mal calculada pq los quaternion son entre -1 y 1
 		// segundo: si el objeto tiene fisicas se movera y rotara por tanto no sirve con comprobar cuatro casos especificos.
 
-		destino.rotation = obj.transform.rotation;
+		destino.rotationExacta = obj.transform.rotation;
 
 
 
@@ -370,7 +365,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 			TestActivityData data = new TestActivityData();
 			RellenarObjeto3D(obj, data);
 			data.type = TestActivityData.TYPE;   // el nombre del prefab puede variar en mayúsculas
-			data.questions = test.allQuestions.ToArray();
+			data.questions = test.PreguntasParaGuardar();
 			return data;
 		}
 

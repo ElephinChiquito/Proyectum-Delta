@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 423758127046317714}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
   m_LocalPosition: {x: 0, y: 0, z: 0.0150001375}
-  m_LocalScale: {x: 0.33164197, y: 0.33164197, z: 0.33164197}
+  m_LocalScale: {x: 0.97130626, y: 0.97130626, z: 0.97130626}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3673006125659869300}
@@ -40,7 +40,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.00019000427, y: -0.0034999964}
+  m_AnchoredPosition: {x: -0.00019000427, y: 1.4985}
   m_SizeDelta: {x: 3.62609, y: 1.7463}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1158826583597796725
@@ -541,8 +541,8 @@ Transform:
   m_GameObject: {fileID: 3117447717224654945}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0, y: 1.502, z: 0}
+  m_LocalScale: {x: 2.9287796, y: 2.9287796, z: 2.9287796}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6514229572441787276}
@@ -1026,7 +1026,7 @@ GameObject:
   - component: {fileID: 6514229572441787276}
   - component: {fileID: 2223425218683986718}
   m_Layer: 0
-  m_Name: TestActivity
+  m_Name: testactivity
   m_TagString: Activity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1042,8 +1042,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.2155, y: 0.976, z: -9.9703}
-  m_LocalScale: {x: 3.0153, y: 3.0153, z: 3.0153}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5228952279773788027}
   - {fileID: 3342370632176612321}

@@ -45,25 +45,24 @@ public class TestActivity : MonoBehaviour
 	const int resC = 2;
 	const int resD = 3;
 
+	public const string PREGUNTA_INICIAL = "¿Comenzar el test?";
+
 	void Awake()
 	{
 		allQuestions = new List<Pregunta>();
-		allQuestions.Add(new Pregunta(
-			"¿Comenzar el test?",
-			"Sí",
-			"No",
-			"",
-			"",
-			0
-		));
+		allQuestions.Add(new Pregunta(PREGUNTA_INICIAL, "Sí", "No", "", "", 0));
+	}
 
-		/* // Pregunta de ejemplo
-		AddNewQuestion("¿Cuál es la capital de Francia?",
-			"París",
-			"Roma",
-			"Londres",
-			"Berlín",
-			0); */
+	/// <summary>Preguntas a guardar en el JSON, sin la pregunta inicial (la añade Awake).</summary>
+	public Pregunta[] PreguntasParaGuardar()
+	{
+		List<Pregunta> resultado = new List<Pregunta>();
+		foreach (Pregunta p in allQuestions)
+		{
+			if (p.question != PREGUNTA_INICIAL)
+				resultado.Add(p);
+		}
+		return resultado.ToArray();
 	}
 
     // Start se llama una vez, antes del primer Update, al crearse el MonoBehaviour

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
-
 
 [Serializable]
 public class Objeto3D
@@ -10,71 +7,54 @@ public class Objeto3D
     public string type;
     public Vector3Data position;
     public float scale;
-    public Quaternion rotation;
+    public string rotation;            // "north"/"east"/"south"/"west" (lo escribe la IA)
+    public Quaternion rotationExacta;  // lo escribe SaveScene
     public string dialog;
     public bool physics;
-	public string[] test;
+    public string[] test;
 
-	private void setRotationWithString(string rotation)
-	{
-		switch (rotation.ToLower())
-        {
-            case "north":
-                this.rotation = Quaternion.Euler(0, 0, 0);
-                break;
-            case "east":
-                this.rotation = Quaternion.Euler(0, 90, 0);
-                break;
-            case "south":
-                this.rotation = Quaternion.Euler(0, 180, 0);
-                break;
-            case "west":
-                this.rotation = Quaternion.Euler(0, 270, 0);
-                break;
-            default:
-                this.rotation = Quaternion.Euler(0, 0, 0);
-                break;
-        }
-	}
-
-    public Objeto3D(){}
-	//Generico para menos bulla visual
-	public Objeto3D(string type, Vector3Data position, float scale, bool physics)
-	{
-		this.type = type;
-        this.position = position;
-        this.scale = scale;
-        this.physics = physics;
-	}
-
-	// Generico con string rotation
-    public Objeto3D(string type, Vector3Data position, float scale, string rotation, bool physics)
-    :this(type, position, scale, physics)
-	{        
-        setRotationWithString(rotation); 
-    }
-
-	// Generico con Quaternion rotation
-    public Objeto3D(string type, Vector3Data position, float scale, Vector3Data rotation, bool physics)
-    :this(type, position, scale, physics)
-	{ 
-        this.rotation = Quaternion.Euler(rotation.x, rotation.y, rotation.z);
-    }
-
-	// CASO NPC
-	// Quaternion
-    public Objeto3D(string type, Vector3Data position, float scale, Vector3Data rotation, string dialog, bool physics)
-    :this(type, position, scale, rotation, physics)
-	{
-        this.dialog = dialog;
-    }
-
-	// string
-    public Objeto3D(string type, Vector3Data position, float scale, string rotation, string dialog, bool physics)
-    :this(type, position, scale, rotation, physics)
+    // Rotación final que se aplica en escena
+    public Quaternion Rotation
     {
-        this.dialog = dialog;
+        get
+        {
+            if (!string.IsNullOrEmpty(rotation))
+            {
+                switch (rotation.ToLower())
+                {
+                    case "east":  return Quaternion.Euler(0, 90, 0);
+                    case "south": return Quaternion.Euler(0, 180, 0);
+                    case "west":  return Quaternion.Euler(0, 270, 0);
+                    default:      return Quaternion.identity;   // north y otros
+                }
+            }
+            bool sinDato = rotationExacta.x == 0 && rotationExacta.y == 0
+                        && rotationExacta.z == 0 && rotationExacta.w == 0;
+            return sinDato ? Quaternion.identity : rotationExacta;
+        }
     }
 
+    public Objeto3D() {}
 
+    public Objeto3D(string type, Vector3Data position, float scale, bool physics)
+    {
+        this.type = type; this.position = position;
+        this.scale = scale; this.physics = physics;
+    }
+
+    public Objeto3D(string type, Vector3Data position, float scale, string rotation, bool physics)
+    : this(type, position, scale, physics)
+    { this.rotation = rotation; }
+
+    public Objeto3D(string type, Vector3Data position, float scale, Vector3Data rotation, bool physics)
+    : this(type, position, scale, physics)
+    { rotationExacta = Quaternion.Euler(rotation.x, rotation.y, rotation.z); }
+
+    public Objeto3D(string type, Vector3Data position, float scale, Vector3Data rotation, string dialog, bool physics)
+    : this(type, position, scale, rotation, physics)
+    { this.dialog = dialog; }
+
+    public Objeto3D(string type, Vector3Data position, float scale, string rotation, string dialog, bool physics)
+    : this(type, position, scale, rotation, physics)
+    { this.dialog = dialog; }
 }
