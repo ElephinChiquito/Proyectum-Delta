@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class GeneradorDeEscena3D : MonoBehaviour
 {
-	/* NECESITAS CAMBIAR SAVE SCENE */
-
 	public static string[] mainObjects;
 	public static string[] customObjects;
 	public static List<GameObject> customList;
