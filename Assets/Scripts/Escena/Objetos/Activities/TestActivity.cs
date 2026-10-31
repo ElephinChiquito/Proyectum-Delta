@@ -167,7 +167,7 @@ public class TestActivity : MonoBehaviour
 	/// la correcta en verde, la pulsada (si es incorrecta) en rojo y el resto en gris.
 	/// </summary>
 	/// <param name="res">Opción pulsada (0-3), o -1 para dejar todos los botones en gris.</param>
-	public void Colorear(int res)
+	private void Colorear(int res)
 	{
 		GameObject[] botones = { buttonA, buttonB, buttonC, buttonD };
 

@@ -1,4 +1,4 @@
-using System;
+/* using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -31,3 +31,4 @@ public class Objeto2D
         this.physics = true;
     }
 }
+ */

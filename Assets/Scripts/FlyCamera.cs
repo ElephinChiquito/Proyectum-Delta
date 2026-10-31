@@ -393,7 +393,15 @@ public class FlyCamera : MonoBehaviour
 		Debug.Log("Deshaciendo destrucción");
 		if (historyZ.Count > 0)
 		{
-			GeneradorDeEscena3D.CrearObjeto(historyZ.Pop());
+			Objeto3D go = historyZ.Pop();
+			if(go is Activity)
+			{
+				GeneradorDeEscena3D.CrearActivity((Activity) go);
+			}
+			else
+			{
+				GeneradorDeEscena3D.CrearObjeto(go);
+			}
 			TutorialPopUp.SetFirstTimeCtrlZPushedTrue();
 		}
 		else

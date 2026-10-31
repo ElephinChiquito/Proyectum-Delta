@@ -6,6 +6,7 @@ using UnityEngine;
 public class GeneradorDeEscena3D : MonoBehaviour
 {
 	public static string[] mainObjects;
+	public static string[] mainActivities;
 	public static string[] customObjects;
 	public static List<GameObject> customList;
 	public GameObject[] npc;
@@ -22,17 +23,23 @@ public class GeneradorDeEscena3D : MonoBehaviour
 			yield return null;
 
 		Debug.Log("Loading custom objects list on start for generador de escenas 3d");
-		customList = CustomObjectsLoader.prefabCache;
 		// Cargar todos los GameObject (prefabs) de la carpeta Resources/Ojetos3D/
 		// Este prefab contiene las acrtividades prefabs porque son objetos3D
 		GameObject[] prefabs = Resources.LoadAll<GameObject>("Objetos3D");
+		// De esta manera podemos comprobar facilmente tanto objetos como actividades
+		GameObject[] activityPrefabs = Resources.LoadAll<GameObject>("Actividades");
+
+		// Objetos3D de la carpeta externa
+		customList = CustomObjectsLoader.prefabCache;
 		GameObject[] customPrefabs = customList.ToArray();
 
+		// Arrays para los nombres de los objetos
 		mainObjects = prefabs.Select(p => p.name).ToArray();
+		mainActivities = activityPrefabs.Select(p => p.name).ToArray();
 		customObjects = customPrefabs.Select(p => p.name).ToArray();
 
 
-
+		// Cargar escena 0 0
 		if (File.Exists(Path.Combine(Application.persistentDataPath, "escena " + Map2D.x + "_" + Map2D.y + ".json")))
 		{
 			Debug.Log("VOY A GENERAR LA ESCENA 0_0");
@@ -40,16 +47,16 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		}
 
 		escenaInicialCargada = true;
-
 	}
 
-	public void Comenzar()
+	// Utilizado en un boton
+	public void GenerarEscena()
 	{
-
 		// Buscar el fichero más reciente
 		string directorio = Application.persistentDataPath;
 		string[] archivos = Directory.GetFiles(directorio, "historial_ia_*.json");
 
+		// Crear default para el tutorial
 		if (archivos.Length == 0)
 		{
 			Debug.LogWarning("No se encontraron ficheros de escena en: " + directorio);
@@ -93,6 +100,8 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		// Ordenamos por fecha de creaci�n y tomamos el �ltimo
 		string ruta = archivos.OrderByDescending(File.GetCreationTime).First();
+
+		// No poder repetir
 		if(lastSceneCreated.Equals(ruta))
         {
             Debug.Log("Escena ya creada con anterioridad, se quieren evitar duplicados.");
@@ -102,15 +111,16 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 		Debug.Log("Cargando fichero: " + ruta);
 
+		// Crear Escena3D
 		string json = File.ReadAllText(ruta);
 		Escena3D escena = Escena3D.Cargar(json);
-
 		if (escena == null || (escena.objects == null && escena.activity == null))
 		{
 			Debug.LogError("Error: El JSON está vacío o mal formado: " + ruta);
 			return;
 		}
 
+		// Crear escena
 		// Cargar objetos
 		foreach (Objeto3D objeto in escena.objects)
 		{
@@ -119,15 +129,16 @@ public class GeneradorDeEscena3D : MonoBehaviour
 			CrearObjeto(objeto);
 		}
 
-		// Cargar actividad unica y singular
+		// Cargar actividad unica y singular si la tiene
 		if(escena.activity != null && !string.IsNullOrEmpty(escena.activity.type))
 		{
-			Activity objeto = escena.activity;
-			Debug.Log($"Creando actividad: {objeto.type} en {objeto.position} y con physics = {objeto.physics}");
+			Activity actividad = escena.activity;
+			Debug.Log($"Creando actividad: {actividad.type} en {actividad.position} y con physics = {actividad.physics}");
 
-			CrearActivity(objeto);
+			CrearActivity(actividad);
 		}
 
+		// Siempre guardar por si acaso se cierra el proyecto
 		SaveScene();
 		Debug.Log("Escena generada con " + escena.objects.Count + " objects.");
 		objectTimer.IniciarMostrado();
@@ -285,7 +296,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 		go.tag = "Activity";
 	}
 
-	public static void SaveScene()///
+    public static void SaveScene()///
 	{
 		GameObject[] todos = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
 		Escena3D copy = new Escena3D();
@@ -299,9 +310,7 @@ public class GeneradorDeEscena3D : MonoBehaviour
 			}
 			if (obj.name.Contains("Clone") && obj.tag.Equals("Activity"))
 			{
-				copy.activity = Transform2Activity(obj);
-				// Activity activity = new Activity(aux.type, aux.position, aux.scale, aux.rotation, false, testActivity.allQuestions)
-				// copy.activity = ;
+				copy.activity = (Activity)Transform2Objeto3D(obj);
 			}
 		}
 
@@ -343,37 +352,36 @@ public class GeneradorDeEscena3D : MonoBehaviour
 
 	public static Objeto3D Transform2Objeto3D(GameObject obj)
 	{
-		Objeto3D aux = new Objeto3D();
+		if (obj.tag.Equals("Activity"))
+		{
+			TestActivity test = obj.GetComponentInChildren<TestActivity>();
+			if (test != null)
+			{
+				TestActivityData data = new TestActivityData();
+				RellenarObjeto3D(obj, data);
+				data.type = TestActivityData.TYPE;   // el nombre del prefab puede variar en mayúsculas
+				data.questions = test.PreguntasParaGuardar();
+				return data;
+			}
+
+			// else if (obj.GetComponentInChildren<OtraActividad>() ...)
+
+			// Error no es una actividad definida
+			Debug.LogWarning("Actividad sin script reconocido: " + obj.name);
+			return null;
+		}
+		// Si no es una actividad sera un objeto3D
+		else
+		{
+			Objeto3D aux = new Objeto3D();
+			RellenarObjeto3D(obj, aux);
+			return aux;
+		}
 		
-		RellenarObjeto3D(obj, aux);
-		return aux;
+		
 	}
 
-	// Espejo para activity
-	public static Activity Transform2Activity(GameObject obj)
-	{
-		if (!obj.tag.Equals("Activity"))
-		{
-			Debug.LogError("Error, se esta llamando a transform2activity con un ojeto que no es actividad con tag Activity");
-		}
-
-		TestActivity test = obj.GetComponentInChildren<TestActivity>();
-		if (test != null)
-		{
-			TestActivityData data = new TestActivityData();
-			RellenarObjeto3D(obj, data);
-			data.type = TestActivityData.TYPE;   // el nombre del prefab puede variar en mayúsculas
-			data.questions = test.PreguntasParaGuardar();
-			return data;
-		}
-
-		// else if (obj.GetComponentInChildren<OtraActividad>() ...)
-
-		Debug.LogWarning("Actividad sin script reconocido: " + obj.name);
-		return null;
-	}
-
-	public static void CleanScene()
+    public static void CleanScene()
 	{
 		GameObject[] todos = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
 		foreach (GameObject obj in todos)
@@ -382,4 +390,5 @@ public class GeneradorDeEscena3D : MonoBehaviour
 				Destroy(obj);
 		}
 	}
+
 }
